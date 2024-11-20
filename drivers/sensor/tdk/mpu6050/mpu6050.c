@@ -234,10 +234,15 @@ int mpu6050_init(const struct device *dev)
 
     k_sleep(K_MSEC(100));
 
+    if (cfg->smplrt_div > 255 || cfg->smplrt_div < 4) {
+        LOG_ERR("Not supported sample rate divider");
+        return -ENOTSUP;
+    }
+
     /* Sample Rate = Gyroscope Output Rate / (1 + smplrt_div)
      * (RM-MPU-6000A-00 rev 4.2 page 12 of 46) */
     if (i2c_reg_write_byte_dt(&cfg->i2c, MPU6050_REG_SAMPLE_RATE_DIVIDER,
-                          CONFIG_MPU6050_SAMPLE_RATE_DIVIDER) < 0) {
+                          cfg->smplrt_div) < 0) {
         LOG_ERR("Sample rate divider configuration failed.");
         return -EIO;
     }
@@ -307,6 +312,7 @@ int mpu6050_init(const struct device *dev)
 		.i2c = I2C_DT_SPEC_INST_GET(inst),						\
 		IF_ENABLED(CONFIG_MPU6050_TRIGGER,						\
 			   (.int_gpio = GPIO_DT_SPEC_INST_GET_OR(inst, int_gpios, { 0 }),))	\
+                .smplrt_div = DT_INST_PROP(inst, smplrt_div)                                    \
 	};											\
 												\
 	SENSOR_DEVICE_DT_INST_DEFINE(inst, mpu6050_init, NULL,					\
