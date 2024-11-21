@@ -98,7 +98,7 @@ struct mpu6050_config {
 #ifdef CONFIG_MPU6050_TRIGGER
 	struct gpio_dt_spec int_gpio;
 #endif /* CONFIG_MPU6050_TRIGGER */
-    int smplrt_div;
+	int smplrt_div;
 };
 
 #ifdef CONFIG_MPU6050_TRIGGER
