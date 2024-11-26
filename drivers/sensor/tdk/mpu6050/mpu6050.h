@@ -95,10 +95,8 @@ struct mpu6050_data {
 
 struct mpu6050_config {
 	struct i2c_dt_spec i2c;
-#ifdef CONFIG_MPU6050_TRIGGER
 	struct gpio_dt_spec int_gpio;
-#endif /* CONFIG_MPU6050_TRIGGER */
-    int smplrt_div;
+	int smplrt_div;
 };
 
 #ifdef CONFIG_MPU6050_TRIGGER
